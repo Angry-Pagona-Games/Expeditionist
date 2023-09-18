@@ -58,8 +58,6 @@ float UCustomMovementComponent::GetMaxSpeed() const
 	{
 		return Super::GetMaxSpeed();
 	}
-
-	
 }
 
 float UCustomMovementComponent::GetMaxAcceleration() const
@@ -145,12 +143,9 @@ void UCustomMovementComponent::ToggleClimb(bool bEnableClimb)
 		{
 			//Enter Climb State
 			StartClimbing();
-			Debug::Print(TEXT("Can Start Climbing"));
-			//Debug::Print(TEXT("Climb Action Started"));
 		}
 		else
 		{
-			Debug::Print(TEXT("Can Start NOT Climbing"));
 		}
 	}
 	else
@@ -254,11 +249,11 @@ bool UCustomMovementComponent::CheckShouldStopClimbing()
 	const float DotResult = FVector::DotProduct(CurrentClimbableSurfaceNormal, FVector::UpVector);
 	const float DegreeDiff = FMath::RadiansToDegrees(FMath::Acos(DotResult));
 
-	if (DegreeDiff <=60.f )
+	if (DegreeDiff <= 60.f )
 	{
 		return true;
 	}
-	Debug::Print(TEXT("Degree Diff ") + FString::SanitizeFloat(DegreeDiff), FColor::Cyan, 1);
+	
 	return false;
 }
 
@@ -308,7 +303,7 @@ bool UCustomMovementComponent::TraceClimbableSurfaces()
 	const FVector Start =UpdatedComponent->GetComponentLocation() + StartOffset;
 	const FVector End = Start + UpdatedComponent->GetForwardVector();
 
-	ClimbableSurfacesTracedResults = DoCapsuleTraceMultiByObject(Start, End, true);
+	ClimbableSurfacesTracedResults = DoCapsuleTraceMultiByObject(Start, End);
 
 	return !ClimbableSurfacesTracedResults.IsEmpty();
 }

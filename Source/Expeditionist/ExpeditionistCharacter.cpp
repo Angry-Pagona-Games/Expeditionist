@@ -72,7 +72,7 @@ void AExpeditionistCharacter::BeginPlay()
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
 	}
-	Debug::Print(TEXT("Debug Working"));
+	
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -177,7 +177,7 @@ void AExpeditionistCharacter::OnClimbAction(const FInputActionValue& Value)
 	if (!CustomMovementComponent->IsClimbing())
 	{
 		CustomMovementComponent->ToggleClimb(true);
-		//Debug::Print(TEXT("Climb Action Started"));
+		
 	}
 	else
 	{
