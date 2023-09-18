@@ -13,6 +13,8 @@ UCLASS()
 class EXPEDITIONIST_API UCustomMovementComponent : public UCharacterMovementComponent
 {
 	GENERATED_BODY()
+public:
+	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 private:
 
@@ -20,6 +22,11 @@ private:
 	TArray<FHitResult> DoCapsuleTraceMultiByObject(const FVector& Start, const FVector& End, bool bShowDegubShape = false);
 #pragma endregion
 
+#pragma region ClimbCore
+	void TraceClimbableSurfaces();
+	
+#pragma endregion	
+	
 #pragma region ClimbVariables
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character Movement: Climbing",meta = (AllowPrivateAccess = "true"))
 	TArray<TEnumAsByte<EObjectTypeQuery> > ClimbableSurfaceTraceTypes;
