@@ -67,6 +67,7 @@ void AExpeditionistCharacter::BeginPlay()
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
 	}
+	Debug::Print(TEXT("Debug Working"));
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -86,6 +87,9 @@ void AExpeditionistCharacter::SetupPlayerInputComponent(UInputComponent* PlayerI
 
 		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AExpeditionistCharacter::Look);
+
+		// Climbing
+		EnhancedInputComponent->BindAction(ClimbAction, ETriggerEvent::Started, this, &AExpeditionistCharacter::OnClimbAction);
 	}
 	else
 	{
@@ -128,3 +132,9 @@ void AExpeditionistCharacter::Look(const FInputActionValue& Value)
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
 }
+
+void AExpeditionistCharacter::OnClimbAction(const FInputActionValue& Value)
+{
+	Debug::Print(TEXT("Climb Action Started"));
+}
+

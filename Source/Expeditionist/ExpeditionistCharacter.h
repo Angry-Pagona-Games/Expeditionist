@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "DebugHelper.h"
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
@@ -20,6 +21,12 @@ class AExpeditionistCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
+public:
+	AExpeditionistCharacter();
+
+private:
+
+	
 	/** Camera boom positioning the camera behind the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	USpringArmComponent* CameraBoom;
@@ -44,17 +51,18 @@ class AExpeditionistCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* LookAction;
 
-public:
-	AExpeditionistCharacter();
-	
-
-protected:
+	/** Climb Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* ClimbAction;
 
 	/** Called for movement input */
 	void Move(const FInputActionValue& Value);
 
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
+
+	/** Called for climbing input*/
+	void OnClimbAction (const FInputActionValue& Value);
 			
 
 protected:
