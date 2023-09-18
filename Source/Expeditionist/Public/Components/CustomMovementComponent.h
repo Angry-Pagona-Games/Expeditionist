@@ -19,12 +19,14 @@ public:
 private:
 
 #pragma region ClimbTraces
-	TArray<FHitResult> DoCapsuleTraceMultiByObject(const FVector& Start, const FVector& End, bool bShowDegubShape = false);
+	TArray<FHitResult> DoCapsuleTraceMultiByObject(const FVector& Start, const FVector& End, bool bShowDebugShape = false);
+	FHitResult DoLineTraceBySingleObject(const FVector& Start, const FVector& End, bool bShowDebugShape = false);
+	
 #pragma endregion
 
 #pragma region ClimbCore
 	void TraceClimbableSurfaces();
-	
+	void TraceFromEyeHeight(float TraceDistance, float TraceStartOffset = 0.f);
 #pragma endregion	
 	
 #pragma region ClimbVariables
@@ -36,5 +38,6 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character Movement: Climbing", meta = (AllowPrivateAccess = "true"))
 	float ClimbCapsuleTraceHalfHeight = 72.f;
+
 #pragma endregion
 };
