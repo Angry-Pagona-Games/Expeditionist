@@ -154,6 +154,9 @@ void UCustomMovementComponent::PhysClimb(float deltaTime, int32 Iterations)
 	}
 
 	/*Process all the Climbable Surfaces info*/
+	TraceClimbableSurfaces();
+	ProcessClimbableSurfacceInfo();
+	
 	/*Check if we should stop climbing*/
 	RestorePreAdditiveRootMotionVelocity();
 
@@ -188,6 +191,26 @@ void UCustomMovementComponent::PhysClimb(float deltaTime, int32 Iterations)
 	/*Snap movement to Climbable Surfaces*/
 }
 
+void UCustomMovementComponent::ProcessClimbableSurfacceInfo()
+{
+	CurrentClimableSurfaceLocation = FVector::ZeroVector;
+	CurrentClimbableSurfaceNormal = FVector::ZeroVector;
+
+	if(ClimbableSurfacesTracedResults.IsEmpty()) return;
+
+	for (const FHitResult& TracedHitResult:ClimbableSurfacesTracedResults)
+	{
+		CurrentClimableSurfaceLocation += TracedHitResult.ImpactPoint;
+		CurrentClimbableSurfaceNormal += TracedHitResult.ImpactNormal;
+	}
+
+	CurrentClimableSurfaceLocation /= ClimbableSurfacesTracedResults.Num();
+	CurrentClimbableSurfaceNormal = CurrentClimbableSurfaceNormal.GetSafeNormal();
+
+	Debug::Print(TEXT("Climable Surface Location: ")+ CurrentClimableSurfaceLocation.ToCompactString(), FColor::Cyan,1);
+	Debug::Print(TEXT("Climable Surface Normal: ")+ CurrentClimbableSurfaceNormal.ToCompactString(), FColor::Red,2);
+}
+
 
 bool UCustomMovementComponent::IsClimbing() const
 {
@@ -201,7 +224,7 @@ bool UCustomMovementComponent::TraceClimbableSurfaces()
 	const FVector Start =UpdatedComponent->GetComponentLocation() + StartOffset;
 	const FVector End = Start + UpdatedComponent->GetForwardVector();
 
-	ClimbableSurfacesTracedResults = DoCapsuleTraceMultiByObject(Start, End, true, true);
+	ClimbableSurfacesTracedResults = DoCapsuleTraceMultiByObject(Start, End, true);
 
 	return !ClimbableSurfacesTracedResults.IsEmpty();
 }
@@ -214,7 +237,7 @@ FHitResult UCustomMovementComponent::TraceFromEyeHeight(float TraceDistance, flo
 	const FVector End = Start +UpdatedComponent->GetForwardVector() * TraceDistance;
 
 	//float TraceDistance = 100.f
-	return  DoLineTraceBySingleObject(Start, End, true, true);
+	return  DoLineTraceBySingleObject(Start, End);
 }
 
 #pragma endregion
