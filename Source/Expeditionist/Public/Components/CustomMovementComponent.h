@@ -81,5 +81,6 @@ private:
 public:
 	void ToggleClimb(bool bEnableClimb);
 	bool IsClimbing() const;
+	FORCEINLINE FVector GetClimbableSurfaceNormal() const {return CurrentClimbableSurfaceNormal;}
 	
 };
