@@ -10,6 +10,8 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "DebugHelper.h"
+
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -138,6 +140,17 @@ void AExpeditionistCharacter::Look(const FInputActionValue& Value)
 
 void AExpeditionistCharacter::OnClimbAction(const FInputActionValue& Value)
 {
-	Debug::Print(TEXT("Climb Action Started"));
+	
+	if (!CustomMovementComponent) return;
+	
+	if (!CustomMovementComponent->IsClimbing())
+	{
+		CustomMovementComponent->ToggleClimb(true);
+		//Debug::Print(TEXT("Climb Action Started"));
+	}
+	else
+	{
+		CustomMovementComponent->ToggleClimb(false);
+	}
 }
 
