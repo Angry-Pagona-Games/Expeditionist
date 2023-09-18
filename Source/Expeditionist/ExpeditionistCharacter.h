@@ -65,7 +65,7 @@ private:
 	void Move(const FInputActionValue& Value);
 	void HandleGroundMovementInput(const FInputActionValue& Value);
 	/** Called for climbing movement input */
-	void HandleClimbMovemeentInput(const FInputActionValue& Value);
+	void HandleClimbMovementInput(const FInputActionValue& Value);
 
 	
 

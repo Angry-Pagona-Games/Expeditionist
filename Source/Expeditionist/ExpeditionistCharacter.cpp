@@ -107,7 +107,7 @@ void AExpeditionistCharacter::Move(const FInputActionValue& Value)
 	if (!CustomMovementComponent) return;
 	if (CustomMovementComponent->IsClimbing())
 	{
-		HandleClimbMovemeentInput(Value);
+		HandleClimbMovementInput(Value);
 	}
 	else
 	{
@@ -139,7 +139,7 @@ void AExpeditionistCharacter::HandleGroundMovementInput(const FInputActionValue&
 	}
 }
 
-void AExpeditionistCharacter::HandleClimbMovemeentInput(const FInputActionValue& Value)
+void AExpeditionistCharacter::HandleClimbMovementInput(const FInputActionValue& Value)
 {
 	// input is a Vector2D
 	const FVector2D MovementVector = Value.Get<FVector2D>();
