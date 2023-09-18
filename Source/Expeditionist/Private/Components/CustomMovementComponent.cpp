@@ -5,6 +5,7 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "Expeditionist/ExpeditionistCharacter.h"
 #include "Expeditionist/DebugHelper.h"
+#include "Components/CapsuleComponent.h"
 
 void UCustomMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 	FActorComponentTickFunction* ThisTickFunction)
@@ -13,6 +14,24 @@ void UCustomMovementComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 //	TraceClimbableSurfaces();
 //	TraceFromEyeHeight(100.f );
 	
+}
+
+void UCustomMovementComponent::OnMovementModeChanged(EMovementMode PreviousMovementMode, uint8 PreviousCustomMode)
+{
+	Super::OnMovementModeChanged(PreviousMovementMode, PreviousCustomMode);
+	if (IsClimbing())
+	{
+		bOrientRotationToMovement = false;
+		CharacterOwner->GetCapsuleComponent()->SetCapsuleHalfHeight(48.f);
+	}
+
+	if (PreviousMovementMode == MOVE_Custom && PreviousCustomMode == ECustomMovementMode::MOVE_Climb)
+	{
+		bOrientRotationToMovement = true;
+		CharacterOwner->GetCapsuleComponent()->SetCapsuleHalfHeight(96.f);
+
+		StopMovementImmediately();
+	}
 }
 
 #pragma region ClimbTraces
@@ -83,6 +102,7 @@ void UCustomMovementComponent::ToggleClimb(bool bEnableClimb)
 		if (bCanStartClimbing())
 		{
 			//Enter Climb State
+			StartClimbing();
 			Debug::Print(TEXT("Can Start Climbing"));
 			//Debug::Print(TEXT("Climb Action Started"));
 		}
@@ -94,6 +114,7 @@ void UCustomMovementComponent::ToggleClimb(bool bEnableClimb)
 	else
 	{
 		//Stop  Climbing
+		StopClimbing();
 	}
 }
 bool UCustomMovementComponent::bCanStartClimbing()
@@ -103,6 +124,16 @@ bool UCustomMovementComponent::bCanStartClimbing()
 	if (!TraceFromEyeHeight(100.f).bBlockingHit) return false;
 
 	return true;
+}
+
+void UCustomMovementComponent::StartClimbing()
+{
+	SetMovementMode(MOVE_Custom, ECustomMovementMode::MOVE_Climb);
+}
+
+void UCustomMovementComponent::StopClimbing()
+{
+	SetMovementMode(MOVE_Falling);
 }
 
 
