@@ -34,9 +34,13 @@ private:
 	bool bShouldMove;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Reference", meta= (AllowPrivateAccess = "true"))
 	bool bIsFalling;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Reference", meta= (AllowPrivateAccess = "true"))
+	bool bIsClimbing;
 	
 	void GetGroundSpeed();
 	void GetAirSpeed();
 	void GetShouldMove();
 	void GetIsFalling();
+	void GetIsClimbing();
 };
