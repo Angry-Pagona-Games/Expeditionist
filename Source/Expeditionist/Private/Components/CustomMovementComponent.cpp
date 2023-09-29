@@ -9,6 +9,17 @@
 #include "CookOnTheSide/CookOnTheFlyServer.h"
 
 
+void UCustomMovementComponent::BeginPlay()
+{
+	Super::BeginPlay();
+	OwningPlayerAnimInstance= CharacterOwner->GetMesh()->GetAnimInstance();
+	if (OwningPlayerAnimInstance)
+	{
+		OwningPlayerAnimInstance->OnMontageEnded.AddDynamic(this, &UCustomMovementComponent::OnClimbMontageEnded);
+		OwningPlayerAnimInstance->OnMontageBlendingOut.AddDynamic(this, &UCustomMovementComponent::OnClimbMontageEnded);
+	}
+}
+
 void UCustomMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType,
                                              FActorComponentTickFunction* ThisTickFunction)
 {
@@ -142,7 +153,7 @@ void UCustomMovementComponent::ToggleClimb(bool bEnableClimb)
 		if (bCanStartClimbing())
 		{
 			//Enter Climb State
-			StartClimbing();
+			PlayClimbMontage(IdleToClimbMontage);
 		}
 		else
 		{
@@ -291,6 +302,7 @@ void UCustomMovementComponent::SnapMovementToClimbableSurfaces(float DeltaTime)
 }
 
 
+
 bool UCustomMovementComponent::IsClimbing() const
 {
 	return  MovementMode== MOVE_Custom && CustomMovementMode == ECustomMovementMode::MOVE_Climb;
@@ -317,6 +329,21 @@ FHitResult UCustomMovementComponent::TraceFromEyeHeight(float TraceDistance, flo
 
 	//float TraceDistance = 100.f
 	return  DoLineTraceBySingleObject(Start, End);
+}
+
+
+void UCustomMovementComponent::PlayClimbMontage(UAnimMontage* MontageToPlay)
+{
+	if (!MontageToPlay) return;
+	if (!OwningPlayerAnimInstance) return;
+	if (OwningPlayerAnimInstance->IsAnyMontagePlaying()) return;
+
+	OwningPlayerAnimInstance->Montage_Play(MontageToPlay);
+}
+
+void UCustomMovementComponent::OnClimbMontageEnded(UAnimMontage* Montage, bool bInterrupted)
+{
+	Debug::Print(TEXT("Climb Montage Edited"));
 }
 
 #pragma endregion
