@@ -237,6 +237,16 @@ void UCustomMovementComponent::PhysClimb(float deltaTime, int32 Iterations)
 
 	/*Snap movement to Climbable Surfaces*/
 	SnapMovementToClimbableSurfaces(deltaTime);
+
+	if (CheckHasReachedLedge())
+	{
+		Debug::Print(TEXT("Ledge Reached"), FColor::Green, 1);
+		
+	}
+	else
+	{
+		Debug::Print(TEXT("Ledge NOT Reached"), FColor::Red, 1);
+	}
 }
 
 void UCustomMovementComponent::ProcessClimbableSurfaceInfo()
@@ -279,7 +289,7 @@ bool UCustomMovementComponent::CheckHasReachedFloor()
 	const FVector Start = UpdatedComponent->GetComponentLocation() + StartOffset;
 	const FVector End = Start + DownVector;
 
-	TArray<FHitResult> PossibleFloorHits = DoCapsuleTraceMultiByObject(Start, End, true);
+	TArray<FHitResult> PossibleFloorHits = DoCapsuleTraceMultiByObject(Start, End, false);
 
 	if(PossibleFloorHits.IsEmpty()) return false;
 	for(const FHitResult& PossibleFloorHit:PossibleFloorHits)
@@ -329,6 +339,27 @@ void UCustomMovementComponent::SnapMovementToClimbableSurfaces(float DeltaTime)
 	);
 }
 
+bool UCustomMovementComponent::CheckHasReachedLedge()
+{
+	FHitResult LedgeHitResult = TraceFromEyeHeight(100.f, 50.f);
+
+	if (!LedgeHitResult.bBlockingHit)
+	{
+		const FVector WalkableTraceStart = LedgeHitResult.TraceEnd;
+		const FVector DownVector = -UpdatedComponent->GetUpVector();
+		const FVector WalkableSurfaceTraceEnd = WalkableTraceStart + DownVector * 100.f;
+
+		FHitResult WalkableSurfaceHitResult=
+		DoLineTraceBySingleObject(WalkableTraceStart, WalkableSurfaceTraceEnd, true);
+
+		if(WalkableSurfaceHitResult.bBlockingHit &&  GetUnrotatedClimbVelocity().Z >10.f)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
 
 
 bool UCustomMovementComponent::IsClimbing() const
@@ -358,7 +389,7 @@ FHitResult UCustomMovementComponent::TraceFromEyeHeight(float TraceDistance, flo
 	const FVector End = Start +UpdatedComponent->GetForwardVector() * TraceDistance;
 
 	//float TraceDistance = 100.f
-	return  DoLineTraceBySingleObject(Start, End);
+	return  DoLineTraceBySingleObject(Start, End, true);
 }
 
 
