@@ -2,9 +2,11 @@
 
 #pragma once
 
+#include "Kismet/KismetMathLibrary.h"
 #include "CoreMinimal.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "CustomMovementComponent.generated.h"
+
 
 class UAnimMontage;
 class UAnimInstance;
@@ -94,5 +96,5 @@ public:
 	void ToggleClimb(bool bEnableClimb);
 	bool IsClimbing() const;
 	FORCEINLINE FVector GetClimbableSurfaceNormal() const {return CurrentClimbableSurfaceNormal;}
-	
+	FVector GetUnrotatedClimbVelocity() const;
 };

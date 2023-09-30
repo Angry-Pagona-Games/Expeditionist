@@ -30,17 +30,21 @@ private:
 	float GroundSpeed;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Reference", meta= (AllowPrivateAccess = "true"))
 	float AirSpeed;
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Reference", meta= (AllowPrivateAccess = "true"))
 	bool bShouldMove;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Reference", meta= (AllowPrivateAccess = "true"))
 	bool bIsFalling;
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Reference", meta= (AllowPrivateAccess = "true"))
 	bool bIsClimbing;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Reference", meta= (AllowPrivateAccess = "true"))
+	FVector ClimbVelocity;
 	
 	void GetGroundSpeed();
 	void GetAirSpeed();
 	void GetShouldMove();
 	void GetIsFalling();
 	void GetIsClimbing();
+	void GetClimbVelocity();
 };

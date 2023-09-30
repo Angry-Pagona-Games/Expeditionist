@@ -7,6 +7,7 @@
 #include "Expeditionist/DebugHelper.h"
 #include "Components/CapsuleComponent.h"
 #include "CookOnTheSide/CookOnTheFlyServer.h"
+#include "Kismet/KismetMathLibrary.h"
 
 
 void UCustomMovementComponent::BeginPlay()
@@ -308,6 +309,8 @@ bool UCustomMovementComponent::IsClimbing() const
 	return  MovementMode== MOVE_Custom && CustomMovementMode == ECustomMovementMode::MOVE_Climb;
 }
 
+
+
 //Trace for Climbable Surfaces, returns true if there are valid surfaces.
 bool UCustomMovementComponent::TraceClimbableSurfaces()
 {
@@ -349,4 +352,8 @@ void UCustomMovementComponent::OnClimbMontageEnded(UAnimMontage* Montage, bool b
 	}
 }
 
+FVector UCustomMovementComponent::GetUnrotatedClimbVelocity() const
+{
+	return UKismetMathLibrary::Quat_UnrotateVector(UpdatedComponent->GetComponentQuat(),Velocity);
+}
 #pragma endregion
