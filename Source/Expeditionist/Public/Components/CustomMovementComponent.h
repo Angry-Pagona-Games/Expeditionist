@@ -54,7 +54,9 @@ private:
 	void PhysClimb(float deltaTime, int32 Iterations);
 	void ProcessClimbableSurfaceInfo();
 	bool CheckShouldStopClimbing();
+	bool CheckHasReachedFloor();
 	FQuat GetClimbRotation(float DeltaTime);
+	
 	void SnapMovementToClimbableSurfaces(float DeltaTime);
 	void PlayClimbMontage(UAnimMontage* MontageToPlay);
 	UFUNCTION()
