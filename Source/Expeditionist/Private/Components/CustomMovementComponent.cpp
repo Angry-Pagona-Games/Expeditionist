@@ -88,6 +88,24 @@ float UCustomMovementComponent::GetMaxAcceleration() const
 	
 }
 
+FVector UCustomMovementComponent::ConstrainAnimRootMotionVelocity(const FVector& RootMotionVelocity,
+	const FVector& CurrentVelocity) const
+{
+	const bool bISPlayingRMMontage =
+		IsFalling() && OwningPlayerAnimInstance && OwningPlayerAnimInstance->IsAnyMontagePlaying();
+
+	if (bISPlayingRMMontage)
+	{
+		return RootMotionVelocity;
+		
+	}
+	else
+	{
+		return Super::ConstrainAnimRootMotionVelocity(RootMotionVelocity, CurrentVelocity);
+	}
+	return Super::ConstrainAnimRootMotionVelocity(RootMotionVelocity, CurrentVelocity);
+}
+
 #pragma region ClimbTraces
 TArray<FHitResult> UCustomMovementComponent::DoCapsuleTraceMultiByObject(const FVector& Start, const FVector& End,
 bool bShowDebugShape, bool bDrawPersistantShapes)
@@ -240,13 +258,11 @@ void UCustomMovementComponent::PhysClimb(float deltaTime, int32 Iterations)
 
 	if (CheckHasReachedLedge())
 	{
-		Debug::Print(TEXT("Ledge Reached"), FColor::Green, 1);
+		StopClimbing();
+		PlayClimbMontage(ClimbToTopMontage);
 		
 	}
-	else
-	{
-		Debug::Print(TEXT("Ledge NOT Reached"), FColor::Red, 1);
-	}
+	
 }
 
 void UCustomMovementComponent::ProcessClimbableSurfaceInfo()
@@ -347,12 +363,12 @@ bool UCustomMovementComponent::CheckHasReachedLedge()
 	{
 		const FVector WalkableTraceStart = LedgeHitResult.TraceEnd;
 		const FVector DownVector = -UpdatedComponent->GetUpVector();
-		const FVector WalkableSurfaceTraceEnd = WalkableTraceStart + DownVector * 100.f;
+		const FVector WalkableSurfaceTraceEnd = WalkableTraceStart + DownVector * 10.f;
 
 		FHitResult WalkableSurfaceHitResult=
 		DoLineTraceBySingleObject(WalkableTraceStart, WalkableSurfaceTraceEnd, true);
 
-		if(WalkableSurfaceHitResult.bBlockingHit &&  GetUnrotatedClimbVelocity().Z >10.f)
+		if(WalkableSurfaceHitResult.bBlockingHit &&  GetUnrotatedClimbVelocity().Z >100.f)
 		{
 			return true;
 		}
@@ -407,6 +423,10 @@ void UCustomMovementComponent::OnClimbMontageEnded(UAnimMontage* Montage, bool b
 	if (Montage== IdleToClimbMontage)
 	{
 		StartClimbing();
+	}
+	else
+	{
+		SetMovementMode(MOVE_Walking);
 	}
 }
 
