@@ -362,13 +362,14 @@ bool UCustomMovementComponent::CheckHasReachedLedge()
 	if (!LedgeHitResult.bBlockingHit)
 	{
 		const FVector WalkableTraceStart = LedgeHitResult.TraceEnd;
+		
 		const FVector DownVector = -UpdatedComponent->GetUpVector();
-		const FVector WalkableSurfaceTraceEnd = WalkableTraceStart + DownVector * 10.f;
+		const FVector WalkableSurfaceTraceEnd = WalkableTraceStart + DownVector * 100.f;
 
 		FHitResult WalkableSurfaceHitResult=
 		DoLineTraceBySingleObject(WalkableTraceStart, WalkableSurfaceTraceEnd, true);
 
-		if(WalkableSurfaceHitResult.bBlockingHit &&  GetUnrotatedClimbVelocity().Z >100.f)
+		if(WalkableSurfaceHitResult.bBlockingHit &&  GetUnrotatedClimbVelocity().Z >10.f)
 		{
 			return true;
 		}
