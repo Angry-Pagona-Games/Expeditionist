@@ -36,6 +36,7 @@ protected:
 	virtual float GetMaxSpeed() const override;
 	virtual float GetMaxAcceleration() const;
 	virtual FVector ConstrainAnimRootMotionVelocity(const FVector& RootMotionVelocity, const FVector& CurrentVelocity) const override;
+	
 #pragma endregion
 	
 private:

@@ -103,7 +103,7 @@ FVector UCustomMovementComponent::ConstrainAnimRootMotionVelocity(const FVector&
 	{
 		return Super::ConstrainAnimRootMotionVelocity(RootMotionVelocity, CurrentVelocity);
 	}
-	return Super::ConstrainAnimRootMotionVelocity(RootMotionVelocity, CurrentVelocity);
+	
 }
 
 #pragma region ClimbTraces
@@ -176,9 +176,7 @@ void UCustomMovementComponent::ToggleClimb(bool bEnableClimb)
 			//Enter Climb State
 			PlayClimbMontage(IdleToClimbMontage);
 		}
-		else
-		{
-		}
+		
 	}
 	else
 	{
@@ -258,7 +256,7 @@ void UCustomMovementComponent::PhysClimb(float deltaTime, int32 Iterations)
 
 	if (CheckHasReachedLedge())
 	{
-		StopClimbing();
+		//StopClimbing();
 		PlayClimbMontage(ClimbToTopMontage);
 		
 	}
