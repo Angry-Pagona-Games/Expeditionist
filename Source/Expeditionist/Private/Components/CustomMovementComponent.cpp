@@ -256,9 +256,14 @@ void UCustomMovementComponent::PhysClimb(float deltaTime, int32 Iterations)
 
 	if (CheckHasReachedLedge())
 	{
+		Debug::Print(TEXT("Ledge Found"), FColor::Purple, 1);
 		//StopClimbing();
 		PlayClimbMontage(ClimbToTopMontage);
 		
+	}
+	else
+	{
+		Debug::Print(TEXT("No LEdge Here"), FColor::Red, 1);
 	}
 	
 }
@@ -360,15 +365,13 @@ bool UCustomMovementComponent::CheckHasReachedLedge()
 	if (!LedgeHitResult.bBlockingHit)
 	{
 		const FVector WalkableTraceStart = LedgeHitResult.TraceEnd;
-		
 		const FVector DownVector = -UpdatedComponent->GetUpVector();
 		const FVector WalkableSurfaceTraceEnd = WalkableTraceStart + DownVector * 100.f;
 
 		FHitResult WalkableSurfaceHitResult=
 		DoLineTraceBySingleObject(WalkableTraceStart, WalkableSurfaceTraceEnd, true);
 
-		if(WalkableSurfaceHitResult.bBlockingHit &&  GetUnrotatedClimbVelocity().Z >10.f)
-		{
+		if(WalkableSurfaceHitResult.bBlockingHit &&  GetUnrotatedClimbVelocity().Z >10.f)		{
 			return true;
 		}
 	}
