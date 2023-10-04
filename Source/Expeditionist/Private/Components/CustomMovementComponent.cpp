@@ -179,11 +179,7 @@ void UCustomMovementComponent::ToggleClimb(bool bEnableClimb)
 		}
 		else if(CanClimbDownLedge())
 		{
-			Debug::Print(TEXT("Ledge Found, Can Climb Down"),FColor::Cyan, 1);
-		}
-		else
-		{
-			Debug::Print(TEXT("NO Ledge Found, CANNOT Climb Down"),FColor::Red, 1);
+			PlayClimbMontage(ClimbDownLedgeMontage);
 		}
 		
 	}
@@ -204,23 +200,23 @@ bool UCustomMovementComponent::bCanStartClimbing()
 
 bool UCustomMovementComponent::CanClimbDownLedge()
 {
-	if (IsFalling()) return false;
+	if(IsFalling()) return false;
 
 	const FVector ComponentLocation = UpdatedComponent->GetComponentLocation();
 	const FVector ComponentForward = UpdatedComponent->GetForwardVector();
 	const FVector DownVector = -UpdatedComponent->GetUpVector();
 
-	const FVector WalkableSurfaceStart = ComponentLocation + ComponentForward * ClimbDownWalkableSurfaceTraceOffset;
-	const FVector WalkableSurfaceTraceEnd = WalkableSurfaceStart + DownVector * 100.f;
+	const FVector WalkableSurfaceTraceStart = ComponentLocation + ComponentForward * ClimbDownWalkableSurfaceTraceOffset;
+	const FVector WalkableSurfaceTraceEnd = WalkableSurfaceTraceStart + DownVector * 100.f;
 
-	FHitResult WalkableSurfaceHit =  DoLineTraceBySingleObject(WalkableSurfaceStart, WalkableSurfaceTraceEnd, true);
+	FHitResult WalkableSurfaceHit = DoLineTraceBySingleObject(WalkableSurfaceTraceStart,WalkableSurfaceTraceEnd,true);
 
 	const FVector LedgeTraceStart = WalkableSurfaceHit.TraceStart + ComponentForward * ClimbDownLedgeTraceOffset;
 	const FVector LedgeTraceEnd = LedgeTraceStart + DownVector * 300.f;
 
-	FHitResult LedgeTraceHit = DoLineTraceBySingleObject(LedgeTraceStart, LedgeTraceEnd, true);
+	FHitResult LedgeTraceHit = DoLineTraceBySingleObject(LedgeTraceStart,LedgeTraceEnd,true);
 
-	if (WalkableSurfaceHit.bBlockingHit && !!LedgeTraceHit.bBlockingHit)
+	if(WalkableSurfaceHit.bBlockingHit && !LedgeTraceHit.bBlockingHit)
 	{
 		return true;
 	}
@@ -458,11 +454,12 @@ void UCustomMovementComponent::PlayClimbMontage(UAnimMontage* MontageToPlay)
 
 void UCustomMovementComponent::OnClimbMontageEnded(UAnimMontage* Montage, bool bInterrupted)
 {
-	if (Montage== IdleToClimbMontage)
+	if (Montage == IdleToClimbMontage || Montage == ClimbDownLedgeMontage)
 	{
 		StartClimbing();
 	}
-	else
+	
+	if (ClimbToTopMontage)
 	{
 		SetMovementMode(MOVE_Walking);
 	}
