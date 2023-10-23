@@ -220,7 +220,7 @@ bool UCustomMovementComponent::CanClimbDownLedge()
 
 	FHitResult LedgeTraceHit = DoLineTraceBySingleObject(LedgeTraceStart, LedgeTraceEnd, true);
 
-	if (WalkableSurfaceHit.bBlockingHit && !!LedgeTraceHit.bBlockingHit)
+	if (WalkableSurfaceHit.bBlockingHit && !LedgeTraceHit.bBlockingHit)
 	{
 		return true;
 	}
