@@ -216,7 +216,15 @@ bool UCustomMovementComponent::CanClimbDownLedge()
 
 	FHitResult LedgeTraceHit = DoLineTraceBySingleObject(LedgeTraceStart,LedgeTraceEnd,true);
 
+<<<<<<< HEAD
+<<<<<<< 120332ed6a9d16eb27a2e1b1f72e6ea3004dea7d
 	if(WalkableSurfaceHit.bBlockingHit && !LedgeTraceHit.bBlockingHit)
+=======
+	if (WalkableSurfaceHit.bBlockingHit && !LedgeTraceHit.bBlockingHit)
+>>>>>>> Fix bug in CustomMovementComponent.cpp
+=======
+	if (WalkableSurfaceHit.bBlockingHit && !LedgeTraceHit.bBlockingHit)
+>>>>>>> ClimbDown
 	{
 		return true;
 	}
